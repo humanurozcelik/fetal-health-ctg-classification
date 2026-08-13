@@ -1,6 +1,6 @@
 # CTG Verileriyle Fetal Sağlık Sınıflandırması (Fetal Health Classification)
 
-Bu proje, kardiyotokografi (CTG) cihazlarından elde edilen dijital sinyal özelliklerini kullanarak anne karnındaki fetüsün sağlık durumunu (Normal, Şüpheli, Patolojik) tahmin eden bir makine öğrenmesi iş akışıdır.
+Bu proje, kardiyotokografi (CTG) kayıtlarından elde edilen dijital sinyal özelliklerini kullanarak anne karnındaki fetüsün sağlık durumunu (Normal, Şüpheli, Patolojik) tahmin eden bir makine öğrenmesi iş akışıdır.
 
 Projenin detaylı metodolojik anlatımına, klinik çıkarımlarına ve süreç adımlarına aşağıdaki Medium makalesinden ulaşabilirsiniz:
 
@@ -19,7 +19,7 @@ Kullanılan veri seti, 2126 gözlemden oluşan açık kaynaklı "Fetal Health Cl
 * **Özellikler (Features):** Kalp atım hızı, variabilite, hızlanmalar ve yavaşlamalar dahil olmak üzere 21 klinik parametre.
 * **Hedef Değişken (Target):** `fetal_health` (1.0: Normal, 2.0: Şüpheli, 3.0: Patolojik)
 
-*Not: Veri temizleme aşamasında 13 adet tekrarlanan (duplicate) veri setinden çıkarılmış ve model 2.113 benzersiz vaka üzerinden eğitilmiştir.*
+*Not: Veri temizleme aşamasında 13 adet tekrarlanan (duplicate) gözlem veri setinden çıkarılmış ve analizlere 2.113 benzersiz gözlem üzerinden devam edilmiştir. Temizlenmiş veri daha sonra %80 eğitim ve %20 hold-out test seti olarak ayrılmıştır.*
 
 ## Kullanılan Teknolojiler ve Modeller
 * **Dil:** Python
