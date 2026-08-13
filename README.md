@@ -40,7 +40,7 @@ pip install pandas numpy scikit-learn matplotlib seaborn xlrd
 
 3. Veri setinin `fetal_health.xls` adıyla ana dizinde olduğundan emin olun ve kodu çalıştırın:
 ```bash
-python medium_fetal_health.py
+python fetal-health-ctg-classification.py
 ```
 
 ## Sonuçlar ve Değerlendirme
