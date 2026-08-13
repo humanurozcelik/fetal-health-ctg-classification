@@ -31,7 +31,7 @@ Kullanılan veri seti, 2126 adet bağımsız vaka içeren açık kaynaklı "Feta
 
 Projeyi kendi ortamınızda çalıştırmak için:
 
-1. Repository'yi klonlayın:
+1. Repository'yi klonlayın
 
 2. Gerekli kütüphaneleri yükleyin:
 ```bash
