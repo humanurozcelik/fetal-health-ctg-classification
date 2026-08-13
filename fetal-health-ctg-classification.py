@@ -129,7 +129,7 @@ y_pred_best = best_rf.predict(X_test)
 print("\nOptimize Edilmiş Random Forest Sınıflandırma Raporu:")
 print(classification_report(y_test, y_pred_best))
 
-# Hata Matrisi (Confusion Matrix)
+# Karışıklık Matrisi (Confusion Matrix)
 plt.figure(figsize=(8, 6))
 cm = confusion_matrix(y_test, y_pred_best)
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
