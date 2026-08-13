@@ -2,7 +2,7 @@
 
 Bu proje, kardiyotokografi (CTG) cihazlarından elde edilen dijital sinyal özelliklerini kullanarak anne karnındaki fetüsün sağlık durumunu (Normal, Şüpheli, Patolojik) tahmin eden uçtan uca bir makine öğrenmesi iş akışıdır (pipeline).
 
-Bu çalışma, **Türkiye Yapay Zeka Akademisi Makine Öğrenmesi Bootcamp** final projesi kapsamında geliştirilmiştir. Projenin detaylı metodolojik anlatımına, klinik çıkarımlarına ve süreç adımlarına aşağıdaki Medium makalesinden ulaşabilirsiniz:
+Projenin detaylı metodolojik anlatımına, klinik çıkarımlarına ve süreç adımlarına aşağıdaki Medium makalesinden ulaşabilirsiniz:
 
 https://medium.com/@humanurozcelik555/ctg-verileriyle-fetal-sa%C4%9Fl%C4%B1k-s%C4%B1n%C4%B1fland%C4%B1rmas%C4%B1-%C3%BC%C3%A7-makine-%C3%B6%C4%9Frenmesi-modelinin-kar%C5%9F%C4%B1la%C5%9Ft%C4%B1r%C4%B1lmas%C4%B1-c5b962e5379a?sharedUserId=humanurozcelik555
 
