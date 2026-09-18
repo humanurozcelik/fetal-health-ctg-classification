@@ -1,57 +1,142 @@
-# CTG Verileriyle Fetal Sağlık Sınıflandırması (Fetal Health Classification)
+# Fetal Health Classification from CTG-Derived Features
 
-Bu proje, kardiyotokografi (CTG) kayıtlarından elde edilen dijital sinyal özelliklerini kullanarak anne karnındaki fetüsün sağlık durumunu (Normal, Şüpheli, Patolojik) tahmin eden bir makine öğrenmesi iş akışıdır.
+A machine-learning bootcamp project for multiclass classification of fetal health using **features extracted from cardiotocography (CTG) examinations**.
 
-Projenin detaylı metodolojik anlatımına, klinik çıkarımlarına ve süreç adımlarına aşağıdaki Medium makalesinden ulaşabilirsiniz:
+The project compares Logistic Regression, Support Vector Machine (SVM), and Random Forest models while emphasizing class imbalance, leakage-aware preprocessing, cross-validation, and hold-out evaluation.
 
+> This repository works with tabular features derived from CTG recordings; it does not process raw CTG waveforms.
+
+## Project Context
+
+This project was developed as part of a data science / machine learning bootcamp to practice an end-to-end classification workflow on biomedical data.
+
+The main learning goals were:
+
+- handling an imbalanced multiclass dataset
+- keeping preprocessing inside scikit-learn pipelines
+- comparing models using cross-validation rather than the test set
+- selecting a metric suitable for class imbalance
+- tuning the selected model with GridSearchCV
+- interpreting a confusion matrix and feature-importance output without treating them as clinical evidence
+
+A longer Turkish write-up is available on Medium:
 https://medium.com/@humanurozcelik555/ctg-verileriyle-fetal-sa%C4%9Fl%C4%B1k-s%C4%B1n%C4%B1fland%C4%B1rmas%C4%B1-%C3%BC%C3%A7-makine-%C3%B6%C4%9Frenmesi-modelinin-kar%C5%9F%C4%B1la%C5%9Ft%C4%B1r%C4%B1lmas%C4%B1-c5b962e5379a?sharedUserId=humanurozcelik555
 
-## Projenin Amacı ve Yaklaşımı
-Tıbbi verilerde sıklıkla karşılaşılan **sınıf dengesizliği (class imbalance)** problemiyle başa çıkmak ve makine öğrenmesi algoritmalarının fetal sağlık sınıflandırmasındaki performansını değerlendirmek amaçlanmıştır. 
+## Dataset
 
-Çalışmada metodolojik doğruluğu sağlamak adına:
-* Sınıf dengesizliğini ele almak için `class_weight='balanced'` parametresi kullanılmıştır.
-* Veri sızıntısını (Data Leakage) önlemek amacıyla ölçekleme işlemleri **Scikit-Learn Pipeline** içerisine entegre edilmiştir.
-* Model seçimi, test setine hiç dokunulmadan sadece eğitim seti üzerinde **5-Fold Cross Validation** ve **Macro F1** skoru ile yapılmıştır.
+The project uses the **Fetal Health Classification** dataset distributed on Kaggle:
 
-## Veri Seti
-Kullanılan veri seti, 2126 gözlemden oluşan açık kaynaklı "Fetal Health Classification" (CTG) veri setidir. 
-* **Özellikler (Features):** Kalp atım hızı, variabilite, hızlanmalar ve yavaşlamalar dahil olmak üzere 21 klinik parametre.
-* **Hedef Değişken (Target):** `fetal_health` (1.0: Normal, 2.0: Şüpheli, 3.0: Patolojik)
+https://www.kaggle.com/datasets/andrewmvd/fetal-health-classification
 
-*Not: Veri temizleme aşamasında 13 adet tekrarlanan (duplicate) gözlem veri setinden çıkarılmış ve analizlere 2.113 benzersiz gözlem üzerinden devam edilmiştir. Temizlenmiş veri daha sonra %80 eğitim ve %20 hold-out test seti olarak ayrılmıştır.*
+The dataset contains **2,126 records** and **21 CTG-derived input features**, with the target variable `fetal_health` represented by three classes:
 
-## Kullanılan Teknolojiler ve Modeller
-* **Dil:** Python
-* **Kütüphaneler:** Pandas, NumPy, Scikit-Learn, Matplotlib, Seaborn, xlrd
-* **Karşılaştırılan Modeller:** Lojistik Regresyon, Destek Vektör Makineleri (SVM), Random Forest (Rastgele Orman)
-* **Optimizasyon:** GridSearchCV
+- `1.0` — Normal
+- `2.0` — Suspect
+- `3.0` — Pathological
 
-##  Kurulum ve Çalıştırma
+The dataset description credits Ayres de Campos et al. and the SisPorto 2.0 work. In this project, 13 duplicate rows are removed before modeling, leaving **2,113 unique observations**.
 
-Projeyi kendi ortamınızda çalıştırmak için:
+## Methodology
 
-1. Repository'yi klonlayın
+The workflow is intentionally simple and reproducible:
 
-2. Gerekli kütüphaneleri yükleyin:
-```bash
-pip install pandas numpy scikit-learn matplotlib seaborn xlrd
+1. Load the dataset and inspect missing values and duplicates.
+2. Remove duplicate observations.
+3. Visualize class distribution and feature correlations.
+4. Create a stratified **80/20 train-test split**.
+5. Compare three classifiers on the training set using **5-fold cross-validation** and **Macro F1**:
+   - Logistic Regression
+   - Support Vector Machine
+   - Random Forest
+6. Use `class_weight="balanced"` to reduce majority-class dominance.
+7. Keep `StandardScaler` inside scikit-learn `Pipeline` objects for Logistic Regression and SVM.
+8. Tune Random Forest hyperparameters using `GridSearchCV` on the training set.
+9. Evaluate the selected model once on the untouched hold-out test set.
+10. Inspect the confusion matrix and Random Forest feature importances.
+
+## Reported Results
+
+The original project run produced the following results:
+
+- **Random Forest CV Macro F1:** approximately 0.885
+- **Hold-out accuracy:** approximately 94.6%
+- **Hold-out Macro F1:** approximately 0.91
+- **Pathological-class recall:** approximately 97% (34 of 35 pathological test samples)
+
+These values describe this specific train/test split and modeling workflow; they should not be interpreted as external clinical validation.
+
+The Random Forest assigned relatively high importance to features including `abnormal_short_term_variability` and `percentage_of_time_with_abnormal_long_term_variability`. Feature importance indicates model reliance, not biological or clinical causality.
+
+## Visual Outputs
+
+### Class Distribution
+
+![Class distribution](1_class_distribution.png)
+
+### Model Comparison
+
+![Model comparison](5_model_comparison.png)
+
+### Confusion Matrix
+
+![Confusion matrix](3_confusion_matrix.PNG)
+
+### Feature Importance
+
+![Feature importance](4_feature_importance.png)
+
+## Repository Structure
+
+```text
+.
+├── fetal_health_classification.py
+├── fetal_health.xls
+├── requirements.txt
+├── 1_class_distribution.png
+├── 2_correlation_heatmap.png
+├── 3_confusion_matrix.PNG
+├── 4_feature_importance.png
+├── 5_model_comparison.png
+├── README.md
+└── LICENSE
 ```
 
-3. Veri setinin `fetal_health.xls` adıyla ana dizinde olduğundan emin olun ve kodu çalıştırın:
+## Installation
+
+Create and activate a virtual environment, then install the dependencies:
+
 ```bash
-python fetal-health-ctg-classification.py
+python -m venv .venv
+pip install -r requirements.txt
 ```
 
-## Sonuçlar ve Değerlendirme
-Çapraz doğrulama sonuçlarına göre en yüksek performansı **Random Forest** algoritması (0.885 CV Macro F1) göstermiştir. 
+On Windows PowerShell:
 
-Grid Search ile optimize edilen Random Forest modelinin daha önce hiç görmediği **Hold-out Test Seti (%20)** üzerindeki nihai performansı:
-* **Accuracy (Doğruluk):** %94.6
-* **Macro F1 Skoru:** 0.91
-* **Patolojik Sınıf Recall (Duyarlılık):** %97 (35 patolojik vakanın 34'ü doğru sınıflandırılmıştır).
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
 
-Random Forest Feature Importance analizine göre model, abnormal_short_term_variability ve percentage_of_time_with_abnormal_long_term_variability özelliklerine en yüksek göreli önem değerlerini atamıştır. Bu değerler, modelin sınıflandırma kararlarında bu özelliklerden daha fazla yararlandığını gösterir; klinik nedensellik anlamına gelmez.
+## Run
 
----
-*Bu çalışma bir eğitim/makine öğrenmesi uygulamasıdır ve doğrudan klinik tanı aracı olarak kullanılmak üzere doğrulanmamıştır.*
+Place `fetal_health.xls` in the repository root and run:
+
+```bash
+python fetal_health_classification.py
+```
+
+The script prints model-comparison and final evaluation results and regenerates the analysis figures in the repository directory.
+
+## Scope and Limitations
+
+This is an **educational machine-learning project**, not a diagnostic system.
+
+Important limitations include:
+
+- a single public dataset
+- no external validation
+- no raw CTG waveform processing
+- a limited model and hyperparameter search space
+- feature importance is model-specific and non-causal
+- reported performance is specific to the chosen data split and evaluation procedure
+
+The project should therefore be interpreted as a demonstration of biomedical-data classification methodology rather than evidence of clinical performance.
